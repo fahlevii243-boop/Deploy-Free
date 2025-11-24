@@ -1,0 +1,1967 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Deploy - All in One</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #1a1a2e;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Navigation */
+        .nav-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #16213e, #0f3460);
+            padding: 15px 30px;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #4a90e2, #63b8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .nav-btn:hover, .nav-btn.active {
+            background: linear-gradient(90deg, #4a90e2, #63b8ff);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+        }
+        
+        /* Sections */
+        .section {
+            display: none;
+            min-height: 100vh;
+            padding: 20px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Home Section Styles */
+        .home-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 60px;
+        }
+        
+        .url-bar {
+            background-color: #0f0f1e;
+            width: 100%;
+            max-width: 500px;
+            padding: 10px 15px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            margin-bottom: -1px;
+        }
+        
+        .url-bar i {
+            color: #888;
+            margin-right: 10px;
+        }
+        
+        .url-text {
+            color: #4a90e2;
+            font-size: 14px;
+        }
+        
+        .main-container {
+            background-color: #16213e;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 0 0 15px 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .profile-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #4a90e2;
+        }
+        
+        .profile-name {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .form-group {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: #0f3460;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #4a90e2;
+        }
+        
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .file-upload input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-upload-label {
+            display: block;
+            padding: 12px 15px;
+            background-color: #0f3460;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        
+        .file-upload:hover .file-upload-label {
+            background-color: #1a4d80;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+        }
+        
+        .btn-primary {
+            background-color: #4a90e2;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a7bc8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
+        }
+        
+        .btn-primary:disabled {
+            background-color: #2a5a8a;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .feature-buttons {
+            display: flex;
+            width: 100%;
+            margin-top: 20px;
+            gap: 15px;
+        }
+        
+        .btn-feature {
+            flex: 1;
+            padding: 12px 0;
+            background-color: #e94560;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+        }
+        
+        .btn-feature:hover {
+            background-color: #d63451;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .social-link {
+            color: #fff;
+            font-size: 24px;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .social-link:hover {
+            color: #4a90e2;
+            transform: translateY(-3px);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4a90e2;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateX(150%);
+            transition: transform 0.3s ease-out;
+            z-index: 1001;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .deploy-result {
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #0f3460;
+            border-radius: 8px;
+            border: 2px solid #4a90e2;
+            display: none;
+            animation: slideDown 0.5s ease-out;
+        }
+        
+        .deploy-result.show {
+            display: block;
+        }
+        
+        .deploy-result h3 {
+            color: #4a90e2;
+            margin-bottom: 15px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .deploy-platforms {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .platform-item {
+            background-color: #1a4d80;
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s;
+        }
+        
+        .platform-item:hover {
+            background-color: #245a9a;
+        }
+        
+        .platform-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .platform-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .platform-name {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .platform-url {
+            color: #4a90e2;
+            font-size: 12px;
+            word-break: break-all;
+            margin-top: 4px;
+        }
+        
+        .platform-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .platform-btn {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+        
+        .platform-btn:hover {
+            background-color: #3a7bc8;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 5px;
+            background-color: #0f3460;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .progress-bar.show {
+            display: block;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #4a90e2;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .deploy-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #4a90e2;
+        }
+        
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            z-index: 2000;
+            animation: fadeIn 0.3s;
+        }
+        
+        .preview-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .preview-content {
+            width: 90%;
+            height: 90%;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .preview-header {
+            background-color: #16213e;
+            color: white;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .preview-title {
+            font-size: 14px;
+        }
+        
+        .preview-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .preview-close:hover {
+            color: #e94560;
+        }
+        
+        .preview-frame {
+            width: 100%;
+            height: calc(100% - 40px);
+            border: none;
+        }
+        
+        /* Penghasil Cuan Section Styles */
+        .penghasil-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 80px;
+        }
+        
+        .penghasil-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+        }
+        
+        .penghasil-title {
+            font-size: 48px;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #e94560, #f47068);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(233, 69, 96, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: #a0a0a0;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(233, 69, 96, 0.3);
+            border-color: #e94560;
+        }
+        
+        .stat-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #e94560;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #4a90e2;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #a0a0a0;
+        }
+        
+        .methods-section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 28px;
+            margin-bottom: 25px;
+            text-align: center;
+            color: #4a90e2;
+        }
+        
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .method-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .method-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(74, 144, 226, 0.3);
+        }
+        
+        .method-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .method-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #e94560, #f47068);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .method-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .method-description {
+            color: #a0a0a0;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .method-stats {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .method-stat {
+            text-align: center;
+        }
+        
+        .method-stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4a90e2;
+        }
+        
+        .method-stat-label {
+            font-size: 12px;
+            color: #a0a0a0;
+        }
+        
+        .cta-section {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.1), rgba(74, 144, 226, 0.1));
+            border-radius: 20px;
+            margin-top: 40px;
+        }
+        
+        .cta-title {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+        
+        .cta-description {
+            font-size: 18px;
+            color: #a0a0a0;
+            margin-bottom: 25px;
+        }
+        
+        .cta-button {
+            background: linear-gradient(90deg, #e94560, #f47068);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(233, 69, 96, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(233, 69, 96, 0.5);
+        }
+        
+        .floating-coins {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .coin {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(255, 215, 0, 0.3);
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            from {
+                transform: translateY(100vh) rotate(0deg);
+            }
+            to {
+                transform: translateY(-100px) rotate(360deg);
+            }
+        }
+        
+        /* Tutorial Cuan Section Styles */
+        .tutorial-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 80px;
+        }
+        
+        .tutorial-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+        }
+        
+        .tutorial-title {
+            font-size: 48px;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #4a90e2, #63b8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(74, 144, 226, 0.5);
+        }
+        
+        .tutorial-categories {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .category-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .category-btn:hover, .category-btn.active {
+            background: linear-gradient(90deg, #4a90e2, #63b8ff);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+        }
+        
+        .tutorials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .tutorial-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .tutorial-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(74, 144, 226, 0.3);
+        }
+        
+        .tutorial-thumbnail {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #4a90e2, #63b8ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            color: rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tutorial-thumbnail::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        .tutorial-content {
+            padding: 25px;
+        }
+        
+        .tutorial-level {
+            display: inline-block;
+            background: rgba(74, 144, 226, 0.2);
+            color: #4a90e2;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .tutorial-card-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        
+        .tutorial-description {
+            color: #a0a0a0;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .tutorial-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .tutorial-duration {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #a0a0a0;
+            font-size: 14px;
+        }
+        
+        .tutorial-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #ffd700;
+            font-size: 14px;
+        }
+        
+        .tutorial-action {
+            background: linear-gradient(90deg, #4a90e2, #63b8ff);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-top: 15px;
+            width: 100%;
+        }
+        
+        .tutorial-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
+        }
+        
+        .featured-section {
+            margin-bottom: 50px;
+        }
+        
+        .featured-title {
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #4a90e2;
+        }
+        
+        .featured-tutorial {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), rgba(99, 184, 255, 0.1));
+            border-radius: 20px;
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .featured-thumbnail {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #e94560, #f47068);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .featured-content h3 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        
+        .featured-content p {
+            color: #a0a0a0;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        .featured-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .featured-stat {
+            text-align: center;
+        }
+        
+        .featured-stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4a90e2;
+        }
+        
+        .featured-stat-label {
+            font-size: 12px;
+            color: #a0a0a0;
+        }
+        
+        .search-box {
+            max-width: 500px;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #4a90e2;
+        }
+        
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(90deg, #4a90e2, #63b8ff);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .search-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        @media (max-width: 768px) {
+            .featured-tutorial {
+                grid-template-columns: 1fr;
+            }
+            
+            .tutorials-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1, .penghasil-title, .tutorial-title {
+                font-size: 32px;
+            }
+            
+            .nav-header {
+                padding: 10px 15px;
+            }
+            
+            .nav-menu {
+                gap: 10px;
+            }
+            
+            .nav-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            
+            .method-stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .featured-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="nav-header" id="navHeader">
+        <div class="nav-container">
+            <div class="nav-logo">Website Deploy</div>
+            <nav class="nav-menu">
+                <button class="nav-btn active" onclick="showSection('home')">
+                    <i class="fas fa-home"></i> Deploy
+                </button>
+                <button class="nav-btn" onclick="showSection('penghasil')">
+                    <i class="fas fa-coins"></i> Penghasil Cuan
+                </button>
+                <button class="nav-btn" onclick="showSection('tutorial')">
+                    <i class="fas fa-graduation-cap"></i> Tutorial
+                </button>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Home Section -->
+    <section id="home" class="section active">
+        <div class="home-container">
+            <div class="url-bar">
+                <i class="fas fa-globe"></i>
+                <span class="url-text">deploy-websitemu</span>
+            </div>
+            
+            <div class="main-container">
+                <div class="profile-section">
+                    <img src="e0b9e28ebcaf6128c5f669caf04c0293.jpg" alt="By Zalldev" class="profile-img">
+                    <div class="profile-name">Zalldev</div>
+                </div>
+                
+                <h1>Website Deploy</h1>
+                
+                <div class="form-group">
+                    <label for="website-name">Nama Website</label>
+                    <input type="text" id="website-name" placeholder="website-kece">
+                </div>
+                
+                <div class="form-group">
+                    <label>Upload File (.html)</label>
+                    <div class="file-upload">
+                        <input type="file" id="html-file" accept=".html">
+                        <label for="html-file" class="file-upload-label">
+                            <i class="fas fa-upload"></i> Pilih File
+                        </label>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" id="deploy-btn">Deploy Sekarang</button>
+                
+                <div class="progress-bar" id="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                
+                <div class="deploy-status" id="deploy-status" style="display: none;">
+                    <i class="fas fa-spinner spinner"></i>
+                    <span>Men-deploy ke platform...</span>
+                </div>
+                
+                <div class="deploy-result" id="deploy-result">
+                    <h3><i class="fas fa-check-circle"></i> Deploy Berhasil!</h3>
+                    <div class="deploy-platforms" id="deploy-platforms">
+                        <!-- Platform links will be inserted here -->
+                    </div>
+                </div>
+                
+                <div class="feature-buttons">
+                    <button class="btn-feature" onclick="showSection('penghasil')">PENGHASIL CUAN 2025</button>
+                    <button class="btn-feature" onclick="showSection('tutorial')">TUTORIAL CUAN</button>
+                </div>
+                
+                <div class="social-links">
+                    <a href="https://saweria.co" target="_blank" class="social-link">
+                        <i class="fas fa-coins"></i>
+                    </a>
+                    <a href="https://wa.me/628123456789" target="_blank" class="social-link">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Penghasil Cuan Section -->
+    <section id="penghasil" class="section">
+        <div class="floating-coins" id="floating-coins"></div>
+        <div class="penghasil-container">
+            <header class="penghasil-header">
+                <h1 class="penghasil-title">PENGHASIL CUAN 2025</h1>
+                <p class="subtitle">Temukan cara terbaru menghasilkan pendapatan digital</p>
+            </header>
+            
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-value">15,234</div>
+                    <div class="stat-label">Pengguna Aktif</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                    <div class="stat-value">Rp 2.5M</div>
+                    <div class="stat-label">Total Pendapatan</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="stat-value">87%</div>
+                    <div class="stat-label">Tingkat Keberhasilan</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                    <div class="stat-value">4.9/5</div>
+                    <div class="stat-label">Rating Pengguna</div>
+                </div>
+            </section>
+            
+            <section class="methods-section">
+                <h2 class="section-title">Metode Penghasilan</h2>
+                <div class="methods-grid">
+                    <div class="method-card">
+                        <div class="method-header">
+                            <div class="method-icon"><i class="fas fa-code"></i></div>
+                            <div class="method-title">Development Freelance</div>
+                        </div>
+                        <p class="method-description">
+                            Dapatkan penghasilan dari jasa pembuatan website, aplikasi, dan solusi digital untuk klien lokal maupun internasional.
+                        </p>
+                        <div class="method-stats">
+                            <div class="method-stat">
+                                <div class="method-stat-value">Rp 5-15M</div>
+                                <div class="method-stat-label">per bulan</div>
+                            </div>
+                            <div class="method-stat">
+                                <div class="method-stat-value">450+</div>
+                                <div class="method-stat-label">proyek</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="method-card">
+                        <div class="method-header">
+                            <div class="method-icon"><i class="fas fa-store"></i></div>
+                            <div class="method-title">E-commerce Dropship</div>
+                        </div>
+                        <p class="method-description">
+                            Jual produk tanpa stok dengan sistem dropship. Fokus pada marketing dan customer service untuk mendapatkan keuntungan.
+                        </p>
+                        <div class="method-stats">
+                            <div class="method-stat">
+                                <div class="method-stat-value">Rp 3-10M</div>
+                                <div class="method-stat-label">per bulan</div>
+                            </div>
+                            <div class="method-stat">
+                                <div class="method-stat-value">30%</div>
+                                <div class="method-stat-label">margin</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="method-card">
+                        <div class="method-header">
+                            <div class="method-icon"><i class="fas fa-video"></i></div>
+                            <div class="method-title">Content Creator</div>
+                        </div>
+                        <p class="method-description">
+                            Hasilkan uang dari YouTube, TikTok, dan Instagram melalui adsense, endorsement, dan penjualan produk digital.
+                        </p>
+                        <div class="method-stats">
+                            <div class="method-stat">
+                                <div class="method-stat-value">Rp 2-20M</div>
+                                <div class="method-stat-label">per bulan</div>
+                            </div>
+                            <div class="method-stat">
+                                <div class="method-stat-value">100K+</div>
+                                <div class="method-stat-label">followers</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="method-card">
+                        <div class="method-header">
+                            <div class="method-icon"><i class="fas fa-graduation-cap"></i></div>
+                            <div class="method-title">Online Course</div>
+                        </div>
+                        <p class="method-description">
+                            Bagikan pengetahuan Anda melalui kursus online. Buat video tutorial, e-book, atau webinar untuk passive income.
+                        </p>
+                        <div class="method-stats">
+                            <div class="method-stat">
+                                <div class="method-stat-value">Rp 1-8M</div>
+                                <div class="method-stat-label">per bulan</div>
+                            </div>
+                            <div class="method-stat">
+                                <div class="method-stat-value">2000+</div>
+                                <div class="method-stat-label">murid</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="method-card">
+                        <div class="method-header">
+                            <div class="method-icon"><i class="fas fa-chart-pie"></i></div>
+                            <div class="method-title">Affiliate Marketing</div>
+                        </div>
+                        <p class="method-description">
+                            Promosikan produk orang lain dan dapatkan komisi. Fokus pada niche tertentu untuk hasil maksimal.
+                        </p>
+                        <div class="method-stats">
+                            <div class="method-stat">
+                                <div class="method-stat-value">Rp 1-5M</div>
+                                <div class="method-stat-label">per bulan</div>
+                            </div>
+                            <div class="method-stat">
+                                <div class="method-stat-value">15-40%</div>
+                                <div class="method-stat-label">komisi</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="method-card">
+                        <div class="method-header">
+                            <div class="method-icon"><i class="fas fa-mobile-alt"></i></div>
+                            <div class="method-title">Aplikasi Mobile</div>
+                        </div>
+                        <p class="method-description">
+                            Buat aplikasi mobile dan monetize melalui iklan, in-app purchase, atau subscription model.
+                        </p>
+                        <div class="method-stats">
+                            <div class="method-stat">
+                                <div class="method-stat-value">Rp 4-12M</div>
+                                <div class="method-stat-label">per bulan</div>
+                            </div>
+                            <div class="method-stat">
+                                <div class="method-stat-value">50K+</div>
+                                <div class="method-stat-label">download</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="cta-section">
+                <h2 class="cta-title">Mulai Hasilkan Cuan Sekarang!</h2>
+                <p class="cta-description">Bergabung dengan 15,234 pengguna yang sudah merasakan manfaatnya</p>
+                <button class="cta-button" onclick="showNotification('Fitur akan segera hadir! Hubungi admin untuk pendaftaran.', 'info')">
+                    Daftar Sekarang
+                </button>
+            </section>
+        </div>
+    </section>
+    
+    <!-- Tutorial Cuan Section -->
+    <section id="tutorial" class="section">
+        <div class="tutorial-container">
+            <header class="tutorial-header">
+                <h1 class="tutorial-title">TUTORIAL CUAN</h1>
+                <p class="subtitle">Pelajari langkah demi langkah untuk menghasilkan pendapatan digital</p>
+            </header>
+            
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Cari tutorial..." id="searchInput" onkeyup="handleSearch(event)">
+                <button class="search-btn" onclick="searchTutorials()">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            
+            <div class="tutorial-categories">
+                <button class="category-btn active" onclick="filterTutorials('all')">Semua</button>
+                <button class="category-btn" onclick="filterTutorials('pemula')">Pemula</button>
+                <button class="category-btn" onclick="filterTutorials('menengah')">Menengah</button>
+                <button class="category-btn" onclick="filterTutorials('lanjutan')">Lanjutan</button>
+                <button class="category-btn" onclick="filterTutorials('gratis')">Gratis</button>
+                <button class="category-btn" onclick="filterTutorials('premium')">Premium</button>
+            </div>
+            
+            <section class="featured-section">
+                <h2 class="featured-title">Tutorial Unggulan</h2>
+                <div class="featured-tutorial">
+                    <div class="featured-thumbnail">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="featured-content">
+                        <h3>Start Your First Online Business</h3>
+                        <p>Panduan lengkap dari nol hingga menghasilkan untuk pemula yang ingin memulai bisnis online. Pelajari cara menemukan niche, membangun brand, dan strategi marketing yang efektif.</p>
+                        <div class="featured-stats">
+                            <div class="featured-stat">
+                                <div class="featured-stat-value">4.9</div>
+                                <div class="featured-stat-label">Rating</div>
+                            </div>
+                            <div class="featured-stat">
+                                <div class="featured-stat-value">12.5K</div>
+                                <div class="featured-stat-label">Siswa</div>
+                            </div>
+                            <div class="featured-stat">
+                                <div class="featured-stat-value">8 Jam</div>
+                                <div class="featured-stat-label">Durasi</div>
+                            </div>
+                        </div>
+                        <button class="tutorial-action" onclick="startTutorial('featured')">
+                            Mulai Belajar Gratis
+                        </button>
+                    </div>
+                </div>
+            </section>
+            
+            <div class="tutorials-grid" id="tutorialsGrid">
+                <!-- Tutorial cards will be generated by JavaScript -->
+            </div>
+        </div>
+    </section>
+    
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+    
+    <!-- Preview Modal -->
+    <div class="preview-modal" id="preview-modal">
+        <div class="preview-content">
+            <div class="preview-header">
+                <span class="preview-title" id="preview-title">Preview Website</span>
+                <button class="preview-close" id="preview-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <iframe class="preview-frame" id="preview-frame"></iframe>
+        </div>
+    </div>
+    
+    <script>
+        // Global variables
+        let currentDeployData = {};
+        let currentSection = 'home';
+        
+        // Tutorial data
+        const tutorials = [
+            {
+                id: 1,
+                title: "Website Development untuk Pemula",
+                description: "Pelajari HTML, CSS, dan JavaScript dari dasar. Buat website pertama Anda dalam 7 hari.",
+                level: "Pemula",
+                duration: "7 Jam",
+                rating: 4.8,
+                students: 5234,
+                icon: "fa-code",
+                category: "pemula"
+            },
+            {
+                id: 2,
+                title: "Digital Marketing Mastery",
+                description: "Strategi marketing digital yang terbukti menghasilkan. SEO, Social Media, dan Email Marketing.",
+                level: "Menengah",
+                duration: "12 Jam",
+                rating: 4.9,
+                students: 8921,
+                icon: "fa-bullhorn",
+                category: "menengah"
+            },
+            {
+                id: 3,
+                title: "E-commerce Dropshipping",
+                description: "Bangun toko online tanpa stok barang. Temukan supplier dan optimasi penjualan.",
+                level: "Pemula",
+                duration: "5 Jam",
+                rating: 4.7,
+                students: 6782,
+                icon: "fa-shopping-cart",
+                category: "pemula"
+            },
+            {
+                id: 4,
+                title: "Advanced Affiliate Marketing",
+                description: "Teknik affiliate marketing tingkat lanjut. Passive income melalui komisi digital.",
+                level: "Lanjutan",
+                duration: "10 Jam",
+                rating: 4.8,
+                students: 3421,
+                icon: "fa-link",
+                category: "lanjutan"
+            },
+            {
+                id: 5,
+                title: "Content Creation untuk YouTube",
+                description: "Buat konten viral dan monetisasi channel YouTube Anda dari nol hingga sukses.",
+                level: "Menengah",
+                duration: "8 Jam",
+                rating: 4.6,
+                students: 9876,
+                icon: "fa-video",
+                category: "menengah"
+            },
+            {
+                id: 6,
+                title: "Crypto Trading Fundamentals",
+                description: "Dasar-dasar trading cryptocurrency. Analisis teknikal dan manajemen risiko.",
+                level: "Lanjutan",
+                duration: "15 Jam",
+                rating: 4.5,
+                students: 2341,
+                icon: "fa-bitcoin",
+                category: "lanjutan"
+            },
+            {
+                id: 7,
+                title: "Mobile App Development",
+                description: "Buat aplikasi Android dan iOS dengan React Native. Monetisasi dengan iklan dan in-app purchase.",
+                level: "Menengah",
+                duration: "20 Jam",
+                rating: 4.9,
+                students: 4567,
+                icon: "fa-mobile-alt",
+                category: "menengah"
+            },
+            {
+                id: 8,
+                title: "Freelancing Career Guide",
+                description: "Mulai karir freelance. Dapatkan klien pertama dan bangun portofolio yang menarik.",
+                level: "Pemula",
+                duration: "6 Jam",
+                rating: 4.7,
+                students: 7654,
+                icon: "fa-laptop",
+                category: "pemula"
+            },
+            {
+                id: 9,
+                title: "Stock Market Investment",
+                description: "Investasi saham untuk pemula. Analisis fundamental dan strategi jangka panjang.",
+                level: "Menengah",
+                duration: "9 Jam",
+                rating: 4.6,
+                students: 5432,
+                icon: "fa-chart-line",
+                category: "menengah"
+            }
+        ];
+        
+        // Platform configurations
+        const platforms = [
+            {
+                name: 'Vercel',
+                icon: '▲',
+                color: '#000000',
+                baseUrl: 'https://'
+            },
+            {
+                name: 'Netlify',
+                icon: 'N',
+                color: '#00C7B7',
+                baseUrl: 'https://'
+            },
+            {
+                name: 'GitHub Pages',
+                icon: '<i class="fab fa-github"></i>',
+                color: '#181717',
+                baseUrl: 'https://'
+            }
+        ];
+        
+        // Navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show/hide navigation header
+            const navHeader = document.getElementById('navHeader');
+            if (sectionId === 'home') {
+                navHeader.style.display = 'none';
+            } else {
+                navHeader.style.display = 'block';
+            }
+            
+            // Set active nav button
+            const activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(btn => 
+                btn.textContent.toLowerCase().includes(sectionId) ||
+                (sectionId === 'home' && btn.textContent.includes('Deploy'))
+            );
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+            
+            currentSection = sectionId;
+            
+            // Initialize section-specific features
+            if (sectionId === 'penghasil') {
+                setTimeout(() => {
+                    createCoins();
+                    animateStats();
+                }, 100);
+            } else if (sectionId === 'tutorial') {
+                setTimeout(() => {
+                    renderTutorials();
+                }, 100);
+            }
+        }
+        
+        // Show notification function
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.backgroundColor = type === 'success' ? '#28a745' : 
+                                               type === 'error' ? '#dc3545' : '#4a90e2';
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Home Section Functions
+        function initHomeSection() {
+            // File upload handling
+            const fileInput = document.getElementById('html-file');
+            fileInput.addEventListener('change', function() {
+                const fileLabel = document.querySelector('.file-upload-label');
+                if (this.files && this.files[0]) {
+                    const fileName = this.files[0].name;
+                    if (fileName.endsWith('.html')) {
+                        fileLabel.innerHTML = `<i class="fas fa-check"></i> ${fileName}`;
+                        fileLabel.style.color = '#4CAF50';
+                    } else {
+                        showNotification('Harap pilih file dengan ekstensi .html', 'error');
+                        this.value = '';
+                        fileLabel.innerHTML = `<i class="fas fa-upload"></i> Pilih File`;
+                        fileLabel.style.color = '#fff';
+                    }
+                }
+            });
+            
+            // Deploy button
+            document.getElementById('deploy-btn').addEventListener('click', function() {
+                const websiteName = document.getElementById('website-name').value;
+                
+                if (!websiteName) {
+                    showNotification('Silakan masukkan nama website', 'error');
+                    return;
+                }
+                
+                if (!fileInput.files || !fileInput.files[0]) {
+                    showNotification('Silakan pilih file HTML', 'error');
+                    return;
+                }
+                
+                // Disable button and show progress
+                this.disabled = true;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Meng-deploy...';
+                const progressBar = document.getElementById('progress-bar');
+                const progressFill = document.getElementById('progress-fill');
+                const deployStatus = document.getElementById('deploy-status');
+                
+                progressBar.classList.add('show');
+                deployStatus.style.display = 'flex';
+                
+                // Read file content
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const fileContent = e.target.result;
+                    
+                    // Simulate deployment progress
+                    let progress = 0;
+                    const progressInterval = setInterval(() => {
+                        progress += 10;
+                        progressFill.style.width = progress + '%';
+                        
+                        // Update status message
+                        if (progress === 30) {
+                            deployStatus.querySelector('span').textContent = 'Mengupload file...';
+                        } else if (progress === 60) {
+                            deployStatus.querySelector('span').textContent = 'Memproses deployment...';
+                        } else if (progress === 90) {
+                            deployStatus.querySelector('span').textContent = 'Mengkonfigurasi domain...';
+                        }
+                        
+                        if (progress >= 100) {
+                            clearInterval(progressInterval);
+                            
+                            // Store deployment data
+                            currentDeployData = {
+                                name: websiteName,
+                                content: fileContent,
+                                timestamp: new Date().toISOString()
+                            };
+                            
+                            // Save to localStorage for preview
+                            localStorage.setItem('currentDeploy', JSON.stringify(currentDeployData));
+                            
+                            // Generate platform URLs
+                            const platformUrls = platforms.map(platform => ({
+                                ...platform,
+                                url: generateDeployUrl(platform, websiteName)
+                            }));
+                            
+                            // Create platform items
+                            const deployPlatforms = document.getElementById('deploy-platforms');
+                            deployPlatforms.innerHTML = '';
+                            platformUrls.forEach(platform => {
+                                const platformItem = document.createElement('div');
+                                platformItem.className = 'platform-item';
+                                platformItem.innerHTML = `
+                                    <div class="platform-info">
+                                        <div class="platform-icon">${platform.icon}</div>
+                                        <div>
+                                            <div class="platform-name">${platform.name}</div>
+                                            <div class="platform-url">${platform.url}</div>
+                                        </div>
+                                    </div>
+                                    <div class="platform-actions">
+                                        <button class="platform-btn copy-btn" data-url="${platform.url}">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                        <button class="platform-btn open-btn" data-url="${platform.url}" data-platform="${platform.name}">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </button>
+                                    </div>
+                                `;
+                                deployPlatforms.appendChild(platformItem);
+                            });
+                            
+                            // Add event listeners to new buttons
+                            document.querySelectorAll('.copy-btn').forEach(btn => {
+                                btn.addEventListener('click', function() {
+                                    const url = this.getAttribute('data-url');
+                                    navigator.clipboard.writeText(url).then(() => {
+                                        showNotification('Link berhasil disalin!', 'success');
+                                    }).catch(() => {
+                                        showNotification('Gagal menyalin link', 'error');
+                                    });
+                                });
+                            });
+                            
+                            document.querySelectorAll('.open-btn').forEach(btn => {
+                                btn.addEventListener('click', function() {
+                                    const url = this.getAttribute('data-url');
+                                    const platform = this.getAttribute('data-platform');
+                                    document.getElementById('preview-title').textContent = `Preview - ${platform}`;
+                                    
+                                    // Create preview URL with content
+                                    const previewUrl = `${window.location.origin}${window.location.pathname}?preview=true`;
+                                    document.getElementById('preview-frame').src = previewUrl;
+                                    document.getElementById('preview-modal').classList.add('show');
+                                });
+                            });
+                            
+                            // Show result after delay
+                            setTimeout(() => {
+                                document.getElementById('deploy-btn').disabled = false;
+                                document.getElementById('deploy-btn').innerHTML = 'Deploy Sekarang';
+                                progressBar.classList.remove('show');
+                                progressFill.style.width = '0%';
+                                deployStatus.style.display = 'none';
+                                document.getElementById('deploy-result').classList.add('show');
+                                showNotification(`Website "${websiteName}" berhasil di-deploy ke semua platform!`, 'success');
+                            }, 1000);
+                        }
+                    }, 300);
+                };
+                
+                reader.onerror = function() {
+                    showNotification('Gagal membaca file', 'error');
+                    document.getElementById('deploy-btn').disabled = false;
+                    document.getElementById('deploy-btn').innerHTML = 'Deploy Sekarang';
+                    progressBar.classList.remove('show');
+                    progressFill.style.width = '0%';
+                    deployStatus.style.display = 'none';
+                };
+                
+                reader.readAsText(file);
+            });
+            
+            // Preview modal close
+            document.getElementById('preview-close').addEventListener('click', function() {
+                document.getElementById('preview-modal').classList.remove('show');
+                document.getElementById('preview-frame').src = '';
+            });
+        }
+        
+        // Generate unique deployment URL
+        function generateDeployUrl(platform, websiteName) {
+            const timestamp = Date.now();
+            const randomId = Math.random().toString(36).substring(2, 8);
+            const cleanName = websiteName.toLowerCase().replace(/[^a-z0-9]/g, '-');
+            
+            switch(platform.name) {
+                case 'Vercel':
+                    return `${platform.baseUrl}${cleanName}-${randomId}.vercel.app`;
+                case 'Netlify':
+                    return `${platform.baseUrl}${cleanName}-${randomId}.netlify.app`;
+                case 'GitHub Pages':
+                    return `${platform.baseUrl}${randomId}.github.io/${cleanName}`;
+                default:
+                    return `${platform.baseUrl}${cleanName}-${randomId}.example.com`;
+            }
+        }
+        
+        // Penghasil Cuan Functions
+        function createCoins() {
+            const container = document.getElementById('floating-coins');
+            if (!container) return;
+            
+            // Clear existing coins
+            container.innerHTML = '';
+            
+            const coinSymbols = ['₹', '€', '$', '£', '¥', '₩'];
+            
+            for (let i = 0; i < 15; i++) {
+                const coin = document.createElement('div');
+                coin.className = 'coin';
+                coin.textContent = coinSymbols[Math.floor(Math.random() * coinSymbols.length)];
+                coin.style.left = Math.random() * 100 + '%';
+                coin.style.animationDelay = Math.random() * 15 + 's';
+                coin.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                container.appendChild(coin);
+            }
+        }
+        
+        function animateStats() {
+            const statValues = document.querySelectorAll('.stat-value');
+            
+            statValues.forEach(stat => {
+                const target = stat.textContent;
+                const isPercentage = target.includes('%');
+                const isRating = target.includes('/');
+                const isCurrency = target.includes('Rp') || target.includes('$');
+                
+                let numericValue = target.replace(/[^0-9.]/g, '');
+                let currentValue = 0;
+                const increment = numericValue / 50;
+                
+                const timer = setInterval(() => {
+                    currentValue += increment;
+                    if (currentValue >= numericValue) {
+                        currentValue = numericValue;
+                        clearInterval(timer);
+                    }
+                    
+                    if (isPercentage) {
+                        stat.textContent = Math.floor(currentValue) + '%';
+                    } else if (isRating) {
+                        stat.textContent = currentValue.toFixed(1) + '/5';
+                    } else if (isCurrency) {
+                        stat.textContent = 'Rp ' + (currentValue > 1 ? Math.floor(currentValue) + 'M' : currentValue.toFixed(1));
+                    } else {
+                        stat.textContent = Math.floor(currentValue).toLocaleString();
+                    }
+                }, 30);
+            });
+        }
+        
+        // Tutorial Cuan Functions
+        function renderTutorials(tutorialsToRender = tutorials) {
+            const grid = document.getElementById('tutorialsGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+            
+            tutorialsToRender.forEach(tutorial => {
+                const card = document.createElement('div');
+                card.className = 'tutorial-card';
+                card.innerHTML = `
+                    <div class="tutorial-thumbnail">
+                        <i class="fas ${tutorial.icon}"></i>
+                    </div>
+                    <div class="tutorial-content">
+                        <span class="tutorial-level">${tutorial.level}</span>
+                        <h3 class="tutorial-card-title">${tutorial.title}</h3>
+                        <p class="tutorial-description">${tutorial.description}</p>
+                        <div class="tutorial-meta">
+                            <div class="tutorial-duration">
+                                <i class="fas fa-clock"></i>
+                                <span>${tutorial.duration}</span>
+                            </div>
+                            <div class="tutorial-rating">
+                                <i class="fas fa-star"></i>
+                                <span>${tutorial.rating}</span>
+                            </div>
+                        </div>
+                        <button class="tutorial-action" onclick="startTutorial(${tutorial.id})">
+                            Mulai Belajar
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        
+        function filterTutorials(category) {
+            // Update active button
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Filter tutorials
+            let filteredTutorials;
+            if (category === 'all') {
+                filteredTutorials = tutorials;
+            } else if (category === 'gratis') {
+                filteredTutorials = tutorials.filter(t => t.id <= 5);
+            } else if (category === 'premium') {
+                filteredTutorials = tutorials.filter(t => t.id > 5);
+            } else {
+                filteredTutorials = tutorials.filter(t => t.category === category);
+            }
+            
+            renderTutorials(filteredTutorials);
+        }
+        
+        function searchTutorials() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filteredTutorials = tutorials.filter(tutorial => 
+                tutorial.title.toLowerCase().includes(searchTerm) ||
+                tutorial.description.toLowerCase().includes(searchTerm)
+            );
+            renderTutorials(filteredTutorials);
+        }
+        
+        function handleSearch(event) {
+            if (event.key === 'Enter') {
+                searchTutorials();
+            }
+        }
+        
+        function startTutorial(id) {
+            if (id === 'featured') {
+                showNotification('Tutorial unggulan akan segera tersedia! Daftar sekarang untuk notifikasi.', 'info');
+            } else {
+                const tutorial = tutorials.find(t => t.id === id);
+                if (tutorial) {
+                    showNotification(`Memulai tutorial: ${tutorial.title}\n\nFitur lengkap akan segera hadir!`, 'info');
+                }
+            }
+        }
+        
+        // Preview functionality
+        function checkPreview() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const isPreview = urlParams.get('preview') === 'true';
+            
+            if (isPreview) {
+                const deployData = JSON.parse(localStorage.getItem('currentDeploy') || '{}');
+                
+                if (deployData.content) {
+                    // Create a new document with the deployed content
+                    document.open();
+                    document.write(deployData.content);
+                    document.close();
+                    
+                    // Add floating badge
+                    const badge = document.createElement('div');
+                    badge.style.cssText = `
+                        position: fixed;
+                        bottom: 20px;
+                        right: 20px;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        padding: 12px 20px;
+                        border-radius: 30px;
+                        font-size: 12px;
+                        z-index: 9999;
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        animation: pulse 2s infinite;
+                    `;
+                    badge.innerHTML = `
+                        <i class="fas fa-rocket"></i>
+                        <span>Live Preview - Deployed</span>
+                    `;
+                    document.body.appendChild(badge);
+                    
+                    // Add pulse animation
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        @keyframes pulse {
+                            0% { transform: scale(1); }
+                            50% { transform: scale(1.05); }
+                            100% { transform: scale(1); }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+            }
+        }
+        
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for preview mode first
+            checkPreview();
+            
+            // Initialize home section
+            initHomeSection();
+            
+            // Initialize based on current section
+            if (currentSection === 'penghasil') {
+                createCoins();
+                animateStats();
+            } else if (currentSection === 'tutorial') {
+                renderTutorials();
+            }
+        });
+        
+        // Handle window resize for responsive design
+        window.addEventListener('resize', function() {
+            // Add any resize handling if needed
+        });
+        
+        // Handle page visibility change
+        document.addEventListener('visibilitychange', function() {
+            // Pause animations when page is not visible
+            if (document.hidden) {
+                // Pause any running animations
+            } else {
+                // Resume animations
+            }
+        });
+    </script>
+</body>
+</html>
